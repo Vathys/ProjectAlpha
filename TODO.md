@@ -15,6 +15,7 @@
   * Server machine is where the documents are saved
   * When server is opened, user will have to pick a folder that contains a .project file, which will contain information on location of bin and src, and location of libraries.
   * Only folders that contain a .project file can be opened
+  * When clients are first connected to the server, the server will send about the project file to the client. The client creates a temporary file in the machine that can also be used to only keep the client changes in the document
 - [ ] Add compile and/or run options in Clients
   * [ ] Open console in all client machine when run
   * Would it be easier to signal all machine's to run OR send run results of one machine to all others?
@@ -45,11 +46,5 @@ val -> "d"
 (In case of a newLine, val = "newLine" but length = 1)
 
 # Websites to Checkout
-Info on SMB: https://en.wikipedia.org/wiki/Server_Message_Block
-
 Solution for Multiple Carets: https://stackoverflow.com/questions/33611407/how-to-show-multiple-carets-in-a-jtextarea-or-jtextpane
 
-### Different SMB Libraries:
-JLan Download by Alfresco: https://sourceforge.net/projects/alfresco/files/JLAN/
-
-Github for SMBJ: https://github.com/hierynomus/smbj
