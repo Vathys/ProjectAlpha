@@ -27,7 +27,7 @@ public class OutputProcessor extends Thread
                if(out != null)
                {
                     out.getData().process();
-                    if(out.getDiff() < 10)
+                    if(out.getDiff() < 10) //also check for how close offsets are
                     {
                          OutputProcessor.addToOutputQueue(new Command(null, "sync"));
                          //add a broadcast to synchronize all clients
