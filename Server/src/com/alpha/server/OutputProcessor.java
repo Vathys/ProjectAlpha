@@ -1,21 +1,21 @@
 package com.alpha.server;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.LinkedList;
 
 import com.alpha.Main;
 import com.alpha.server.gui.ServerGUI;
+import com.alpha.server.helper.Data;
 
 public class OutputProcessor extends Thread
 {
 
-     private static BlockingQueue<Command> clientOutputQueue;
-     private static BlockingQueue<Command> clientInputQueue;
+     private static LinkedList<Command> clientOutputQueue;
+     private static LinkedList<Data> clientInputQueue;
 
      public OutputProcessor(HubServer hub)
      {
-          clientOutputQueue = new LinkedBlockingQueue<Command>();
-          clientInputQueue = new LinkedBlockingQueue<Command>();
+          clientOutputQueue = new LinkedList<Command>();
+          clientInputQueue = new LinkedList<Data>();
           Main.gui.addText("Queues Active");
      }
 
@@ -23,34 +23,45 @@ public class OutputProcessor extends Thread
      {
           while (!ServerGUI.getServerClosing())
           {
-               Command out = clientInputQueue.poll();
+               Data out = clientInputQueue.poll();
                if(out != null)
                {
-                    out.process();
-                    
-                    clientOutputQueue.add(out);
+                    out.getData().process();
+                    if(out.getDiff() < 10)
+                    {
+                         OutputProcessor.addToOutputQueue(new Command(null, "sync"));
+                         //add a broadcast to synchronize all clients
+                    }
+                    OutputProcessor.addToOutputQueue(out);
                }
           }
+     }
+
+     public static void addToOutputQueue(Data com)
+     {
+          clientOutputQueue.add(com.getData());
      }
 
      public static void addToOutputQueue(Command com)
      {
           clientOutputQueue.add(com);
      }
-
+     
      public static void addToInputQueue(Command input)
      {
-          clientInputQueue.add(input);
+          if(clientInputQueue.isEmpty())
+          {
+               clientInputQueue.add(new Data(input));
+          }
+          else {
+               clientInputQueue.add(new Data(input, clientInputQueue.peekLast()));
+          }
+          //clientInputQueue.add(input);
      }
 
-     public static BlockingQueue<Command> getInputQueue()
+     public static LinkedList<Data> getInputQueue()
      {
           return clientInputQueue;
-     }
-
-     public static Command takeFromInputQueue()
-     {
-          return clientInputQueue.poll();
      }
 
      public static Command takeFromOutputQueue()

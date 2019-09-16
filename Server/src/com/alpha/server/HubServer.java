@@ -64,7 +64,19 @@ public class HubServer extends Thread
                     Integer toRemove = null;
 
                     int size = connectedClients.size();
-
+                    String msg = "";
+                    if(com.output().equals("sync"))
+                    {
+                         try
+                         {
+                              msg = pd.getText(0, pd.getLength());
+                              msg += "[+][0][" + pd.getLength() + "]" + "\"" + msg + "\"";
+                              msg += "{" + msg + "}";
+                         } catch (BadLocationException e)
+                         {
+                              e.printStackTrace();
+                         }    
+                    }
                     for (int i = 0; i < size; i++)
                     {
                          ClientThread client = connectedClients.get(i);
@@ -75,7 +87,13 @@ public class HubServer extends Thread
                                    client.talkToClient(com.output());
                               }
                               updateFile(com.output());
-                         } else
+                         } else if(com.output().equals("sync"))
+                         {
+                              client.talkToClient(msg);
+                              //This might be a problem considering the length of some code.
+                              //We still haven't restricted sending only some document
+                         }
+                         else
                          {
                               if (client.getClient().getInetAddress().equals(com.sentFrom()))
                               {
