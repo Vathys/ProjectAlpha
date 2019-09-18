@@ -10,19 +10,20 @@ public class Data
      private Date timeSent;
      private long diff;
      
-     public Data(Command com, Data prevData) 
+     public Data(Command com, Date prevTime) 
      {
           data = com;
           timeSent = new Date();
-          diff = timeSent.getTime() - prevData.getTimeSent().getTime();
+          diff = timeSent.getTime() - prevTime.getTime();
      }
 
      public Data(Command com)
      {
           data = com;
           timeSent = new Date();
-          diff = timeSent.getTime();
+          diff = -1;
      }
+     
      /**
       * @return the data
       */
@@ -43,5 +44,6 @@ public class Data
      {
           return diff;
      }
+
      
 }

@@ -20,15 +20,20 @@ public class Command
           if (rawCommand.equals("exit"))
           {
                outputCommand = null;
-          } else
+          } 
+          else if(rawCommand.equals("sync"))
+          {
+               outputCommand = rawCommand;
+          }
+          else
           {
                outputCommand = "{" + rawCommand + "}";
           }
      }
 
-     public InetAddress sentFrom()
+     public ClientThread sentFrom()
      {
-          return sentFrom.getClient().getInetAddress();
+          return sentFrom;
      }
 
      public String output()

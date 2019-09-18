@@ -1,6 +1,9 @@
 package com.alpha.server;
 
+import java.util.Date;
 import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 
 import com.alpha.Main;
 import com.alpha.server.gui.ServerGUI;
@@ -9,13 +12,15 @@ import com.alpha.server.helper.Data;
 public class OutputProcessor extends Thread
 {
 
-     private static LinkedList<Command> clientOutputQueue;
-     private static LinkedList<Data> clientInputQueue;
-
+     private static BlockingQueue<Command> clientOutputQueue;
+     private static BlockingQueue<Data> clientInputQueue;
+     private static Date latestTime;
+     
      public OutputProcessor(HubServer hub)
      {
-          clientOutputQueue = new LinkedList<Command>();
-          clientInputQueue = new LinkedList<Data>();
+          clientOutputQueue = new LinkedBlockingDeque<Command>();
+          clientInputQueue = new LinkedBlockingDeque<Data>();
+          latestTime = new Date();
           Main.gui.addText("Queues Active");
      }
 
@@ -27,12 +32,15 @@ public class OutputProcessor extends Thread
                if(out != null)
                {
                     out.getData().process();
-                    if(out.getDiff() < 10) //also check for how close offsets are
-                    {
-                         OutputProcessor.addToOutputQueue(new Command(null, "sync"));
-                         //add a broadcast to synchronize all clients
-                    }
+                    //System.out.println(out.getData().output() + " " + out.getDiff());
                     OutputProcessor.addToOutputQueue(out);
+                    if(out.getDiff() < 50 && out.getDiff() > 0) //also check for how close offsets are
+                    {
+                         //System.out.println("sync sent");
+                         Command c = new Command(null, "sync");
+                         c.process();
+                         OutputProcessor.addToOutputQueue(c);
+                    }
                }
           }
      }
@@ -49,17 +57,11 @@ public class OutputProcessor extends Thread
      
      public static void addToInputQueue(Command input)
      {
-          if(clientInputQueue.isEmpty())
-          {
-               clientInputQueue.add(new Data(input));
-          }
-          else {
-               clientInputQueue.add(new Data(input, clientInputQueue.peekLast()));
-          }
-          //clientInputQueue.add(input);
+          clientInputQueue.add(new Data(input, latestTime));
+          latestTime = new Date();
      }
 
-     public static LinkedList<Data> getInputQueue()
+     public static BlockingQueue<Data> getInputQueue()
      {
           return clientInputQueue;
      }
