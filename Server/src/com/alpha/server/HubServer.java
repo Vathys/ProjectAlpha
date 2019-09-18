@@ -61,8 +61,6 @@ public class HubServer extends Thread
 
                if (com != null)
                {
-                    Integer toRemove = null;
-
                     int size = connectedClients.size();
                     if(com.output() != null)
                     {
@@ -82,11 +80,7 @@ public class HubServer extends Thread
                     }
                     else
                     {
-                         toRemove = connectedClients.indexOf(com.sentFrom());
-                    }
-                    if (toRemove != null)
-                    {
-                         connectedClients.remove(toRemove.intValue());
+                         connectedClients.remove(connectedClients.indexOf(com.sentFrom()));
                          updateTextArea();
                          System.out.println(com.sentFrom().getClient().getInetAddress() + " removed");
                     }
@@ -114,11 +108,9 @@ public class HubServer extends Thread
                pw.close();
           } catch (FileNotFoundException e)
           {
-               // TODO Auto-generated catch block
                e.printStackTrace();
           } catch (BadLocationException e)
           {
-               // TODO Auto-generated catch block
                e.printStackTrace();
           }
      }

@@ -3,9 +3,15 @@ package com.alpha.server.gui;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.TrayIcon.MessageType;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -23,9 +29,59 @@ public class ServerGUI extends JFrame
      {
           super("Server");
 
+          // Create an object of JFileChooser class 
+          JFileChooser j = new JFileChooser(".\\test");
+          j.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+          
+          boolean valid = false;
+
+          // Invoke the showsOpenDialog function to show the save dialog 
+          while(!valid)
+          {
+               int r = j.showOpenDialog(null);
+               // If the user selects a file 
+               if (r == JFileChooser.APPROVE_OPTION)
+               {
+                    // Set the label to the path of the selected directory 
+                    File fi = new File(j.getSelectedFile().getAbsolutePath());
+                    
+                    if(fi.isDirectory())
+                    {
+                         //initialize the ProjectHandler class and send it to HubServer
+                         for(int i = 0; i < fi.listFiles().length; i++)
+                         {
+                              File f = fi.listFiles()[i];
+                              if(f.getName().contains(".project"))
+                              {
+                                   valid = true;
+                                   System.out.println("initializing project...");
+                                   break;
+                              }
+                         }
+                         if(!valid)
+                         {
+                              JOptionPane.showMessageDialog(this, "Please pick a valid project folder", "No Project Folder", JOptionPane.ERROR_MESSAGE);
+                         }
+                    }
+                    else
+                    {
+                         JOptionPane.showMessageDialog(this, "Please pick a folder", "No Valid Folder", JOptionPane.ERROR_MESSAGE);
+                    }
+               }
+               else
+               {
+                    break;
+               }
+          }
+          
+          initializeMainServerGUI();
+     }
+
+     public void initializeMainServerGUI()
+     {
+
           lis = new CustomListener();
           closingServer = false;
-
           
           textArea = new JTextArea();
           textArea.setPreferredSize(new Dimension(500, 200));
@@ -55,7 +111,7 @@ public class ServerGUI extends JFrame
           pack();
           setVisible(true);
      }
-
+     
      public void setText(String text)
      {
           textArea.setText(text + "\n");

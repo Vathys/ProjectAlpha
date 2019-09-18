@@ -98,7 +98,7 @@ public class CustomListener implements ActionListener, DocumentListener, WindowL
           } else if (s.equals("Open"))
           {
                // Create an object of JFileChooser class 
-               JFileChooser j = new JFileChooser(".\\text");
+               JFileChooser j = new JFileChooser(".\\test");
 
                // Invoke the showsOpenDialog function to show the save dialog 
                int r = j.showOpenDialog(null);
