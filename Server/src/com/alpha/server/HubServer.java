@@ -307,8 +307,8 @@ public class HubServer extends Thread
           try
           {
                msg = pd.getText(0, pd.getLength());
-               msg += "[+][0][" + pd.getLength() + "]" + "\"" + msg + "\"";
-               msg += "{" + msg + "}";
+               msg = "[0][off0][len" + pd.getLength() + "]" + "\"" + msg + "\"";
+               msg = "{" + msg + "}";
           } catch (BadLocationException e)
           {
                e.printStackTrace();

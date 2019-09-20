@@ -105,7 +105,7 @@ public class ClientThread extends Thread
                          if (!clientCom.isEmpty())
                          {
                               byte[] encoded = clientCom.poll().getBytes(Charset.forName("UTF-8"));
-                              //System.out.println("Message sent to Clients: " + new String(encoded, Charset.forName("UTF-8")));
+                              System.out.println("Message sent to Clients: " + new String(encoded, Charset.forName("UTF-8")));
                               cpw.println(new String(encoded, Charset.forName("UTF-8")));
                          }
                     }

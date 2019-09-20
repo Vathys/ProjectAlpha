@@ -176,7 +176,7 @@ public class Editor extends Thread
      {
           textArea.getDocument().removeDocumentListener(lis);
 
-          ArrayList<String> check = RegexParser.matches("\\[([+|-])\\]\\[off(\\d+)\\]\\[len(\\d+)\\]\"(.*?)\"", com);
+          ArrayList<String> check = RegexParser.matches("\\[([+|-|0])\\]\\[off(\\d+)\\]\\[len(\\d+)\\]\"(.*?)\"", com);
           /*
           for(int i = 1; i < check.size(); i++)
           {
@@ -225,6 +225,10 @@ public class Editor extends Thread
                } else if (check.get(1).equals("-"))
                {
                     textArea.getDocument().remove(offset, length);
+               } else if(check.get(1).equals("0"))
+               {
+                    textArea.getDocument().remove(0, textArea.getDocument().getLength());
+                    textArea.getDocument().insertString(0, str, null);
                }
           } catch (BadLocationException e)
           {
