@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -46,13 +47,48 @@ public class HubServer extends Thread
           }
 
           pd = new PlainDocument();
-          test = new File(".\\test\\saveTest");
+          test = new File(".\\test\\testProject\\saveTest");
+          String save = "";
+          try
+          {
+               FileReader fr = new FileReader(test);
+               int i;
+               while((i = fr.read()) != -1)
+               {
+                    save += (char)i;
+               }
+               fr.close();
+          } catch (FileNotFoundException e)
+          {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+          } catch (IOException e)
+          {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+          }
+          System.out.println(save);
+          try
+          {
+               pd.insertString(0, save, null);
+          } catch (BadLocationException e)
+          {
+               // TODO Auto-generated catch block
+               e.printStackTrace();
+          }
+          
 
           this.start();
           op.start();
           collector.start();
      }
 
+     /**
+      * <h1> HubServer Run </h1>
+      * This function keeps a running while that takes from the 
+      * Output Processor output queue and relays messages to all 
+      * the clients according to instructions.
+      * */
      public void run()
      {
           while (!ServerGUI.getServerClosing())
@@ -67,11 +103,11 @@ public class HubServer extends Thread
                          for(int i = 0; i < size; i++)
                          {
                               ClientThread client = connectedClients.get(i);
-                              if(com.output().equals("sync"))
+                              if(com.output().equals("sync")) // send sync msg to everyone if msg is sync
                               {
                                    client.talkToClient(syncMsg());
                               }
-                              else if(!client.equals(com.sentFrom()))
+                              else if(!client.equals(com.sentFrom())) // if not, send to all client that have not sent the msg
                               {
                                    client.talkToClient(com.output());
                               }
@@ -82,14 +118,14 @@ public class HubServer extends Thread
                     {
                          connectedClients.remove(connectedClients.indexOf(com.sentFrom()));
                          updateTextArea();
-                         System.out.println(com.sentFrom().getClient().getInetAddress() + " removed");
+                         System.out.println(com.sentFrom().getClient().getInetAddress() + " removed"); //System print
                     }
                }
                if (connectedClients.size() == 0)
                {
                     Main.gui.setText("No clients connected");
                }
-          }
+          } // end while
           try
           {
                server.close();
@@ -97,6 +133,8 @@ public class HubServer extends Thread
           {
                e.printStackTrace();
           }
+          //Saving text from Plain Document to the saved file
+          //This will be replaced by a call to ProjectHandler to complete saving files
           try
           {
                PrintWriter pw = new PrintWriter(test);
@@ -114,18 +152,27 @@ public class HubServer extends Thread
                e.printStackTrace();
           }
      }
-
+     
+     /**
+      * @return ArrayList<ClientThread> returns a list of all connected Clients
+      * */
      public ArrayList<ClientThread> getConnectedClients()
      {
           return connectedClients;
      }
-
+     /**
+      * Adds Clients to the list of clients connected to the server
+      * @param e ClientThread to add
+      */
      private void addClient(ClientThread e)
      {
           connectedClients.add(e);
           connectedClients.get(connectedClients.size() - 1).startThreads();
      }
 
+     /**
+      * Updates the Server GUI TextArea
+      */
      private void updateTextArea()
      {
           int size = connectedClients.size();
@@ -136,7 +183,12 @@ public class HubServer extends Thread
           }
           Main.gui.setText(text);
      }
-
+     
+     /**
+      * Updates the Plain Document with changes
+      * This function will probably be moved to ProjectHandler
+      * @param com msg in protocol to add
+      */
      private void updateFile(String com)
      {
           ArrayList<String> check = RegexParser.matches("\\[([+|-])\\]\\[off(\\d+)\\]\\[len(\\d+)\\]\"(.*?)\"", com);
@@ -199,11 +251,20 @@ public class HubServer extends Thread
           }
      }
 
+     /**
+      * 
+      * @param c
+      */
      private void updateClient(ClientThread c)
      {
           try
           {
                String[] content = pd.getText(0, pd.getLength()).split("\\n");
+               
+               for(String s : content)
+               {
+                    System.out.println(s);
+               }
                
                int off = 0;
 
