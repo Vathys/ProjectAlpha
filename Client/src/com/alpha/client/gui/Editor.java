@@ -176,7 +176,7 @@ public class Editor extends Thread
      {
           textArea.getDocument().removeDocumentListener(lis);
 
-          ArrayList<String> check = RegexParser.matches("\\[([+|-|0])\\]\\[off(\\d+)\\]\\[len(\\d+)\\]\"(.*?)\"", com);
+          ArrayList<String> check = RegexParser.matches("\\[([+-0])\\]\\[off(\\d+)\\]\\[len(\\d+)\\]\"(.*?)\"", com);
           /*
           for(int i = 1; i < check.size(); i++)
           {

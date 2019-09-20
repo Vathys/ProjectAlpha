@@ -23,10 +23,11 @@ public class Client extends Thread
       * {EventType Offset Length StringValue}
       * 
       * The whole message (0)
-      * EventType -> [+ (EventType.INSERT) OR - (EventType.REMOVE)] (1)
+      * EventType -> [+ (EventType.INSERT) OR - (EventType.REMOVE) OR 0 (sync)] (1)
       * Offset -> [off, #] (2)
       * Length -> [len, #] (3)
       * StringValue -> "val" (4)
+      * DocumentName -> 
       * 
       * Example:
       * 

@@ -1,5 +1,6 @@
 package com.alpha.server;
 
+import java.net.InetAddress;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.concurrent.BlockingQueue;
@@ -15,12 +16,14 @@ public class OutputProcessor extends Thread
      private static BlockingQueue<Command> clientOutputQueue;
      private static BlockingQueue<Data> clientInputQueue;
      private static Date latestTime;
+     private static InetAddress latestClient;
      
      public OutputProcessor(HubServer hub)
      {
           clientOutputQueue = new LinkedBlockingDeque<Command>();
           clientInputQueue = new LinkedBlockingDeque<Data>();
           latestTime = new Date();
+          latestClient = null;
           Main.gui.addText("Queues Active");
      }
 
@@ -34,13 +37,14 @@ public class OutputProcessor extends Thread
                     out.getData().process();
                     System.out.println(out.getData().output() + " " + out.getDiff());
                     OutputProcessor.addToOutputQueue(out);
-                    if(out.getDiff() < 1000 && out.getDiff() > 0) //also check for how close offsets are
+                    if(out.getDiff() < 1000 && out.getDiff() > 0 && !latestClient.equals(out.getClientSent())) //also check for how close offsets are
                     {
                          //System.out.println("sync sent");
                          Command c = new Command(null, "sync");
                          c.process();
                          OutputProcessor.addToOutputQueue(c);
                     }
+                    latestClient = out.getClientSent();
                }
           }
      }
@@ -55,9 +59,9 @@ public class OutputProcessor extends Thread
           clientOutputQueue.add(com);
      }
      
-     public static void addToInputQueue(Command input)
+     public static void addToInputQueue(ClientThread clientSent, Command input)
      {
-          clientInputQueue.add(new Data(input, latestTime));
+          clientInputQueue.add(new Data(clientSent, input, latestTime));
           latestTime = new Date();
      }
 

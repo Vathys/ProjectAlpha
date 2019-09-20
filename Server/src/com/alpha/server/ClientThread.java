@@ -58,7 +58,7 @@ public class ClientThread extends Thread
                          {
                               Command c = new Command(this, check.get(1));
                               System.out.println("Time when Command received: " + HubServer.getCurrentTimeStamp());
-                              OutputProcessor.addToInputQueue(c);
+                              OutputProcessor.addToInputQueue(this, c);
 
                               msg = "";
                          }
