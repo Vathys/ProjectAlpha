@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.net.SocketAddress;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 import com.alpha.server.Command;
@@ -56,6 +57,7 @@ public class ClientThread extends Thread
                          if (!check.isEmpty())
                          {
                               Command c = new Command(this, check.get(1));
+                              System.out.println("Time when Command received: " + HubServer.getCurrentTimeStamp());
                               OutputProcessor.addToInputQueue(c);
 
                               msg = "";

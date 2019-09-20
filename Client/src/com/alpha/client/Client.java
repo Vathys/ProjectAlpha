@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.nio.charset.Charset;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
@@ -104,6 +106,7 @@ public class Client extends Thread
                               {
                                    // System.out.println(this.getName());
                                    // System.out.println("Command: " + check.get(1));
+                                   System.out.println("Time " + check.get(1) + " received: " + getCurrentTimeStamp());
                                    e.addUpdate(check.get(1));
                                    msg = "";
                               }
@@ -140,8 +143,10 @@ public class Client extends Thread
                     {
                          if (!com.isEmpty())
                          {
-                              byte[] encoded = com.poll().getBytes(Charset.forName("UTF-8"));
+                              String s = com.poll();
+                              byte[] encoded = s.getBytes(Charset.forName("UTF-8"));
                               //System.out.println(new String(encoded, Charset.forName("UTF-8")));
+                              System.out.println("Time " + s + " sent: " + getCurrentTimeStamp());
                               cpw.println(new String(encoded, Charset.forName("UTF-8")));
 
                          }
@@ -156,6 +161,11 @@ public class Client extends Thread
           }
      }
 
+     public static String getCurrentTimeStamp() {
+          return LocalDateTime.now()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+     }
+     
      public static void main(String[] args)
      {
           String serverName = args[0];

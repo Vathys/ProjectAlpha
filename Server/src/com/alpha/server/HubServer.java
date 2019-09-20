@@ -10,7 +10,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.net.ServerSocketFactory;
 import javax.swing.event.DocumentEvent.EventType;
@@ -48,7 +52,7 @@ public class HubServer extends Thread
 
           pd = new PlainDocument();
           test = new File(".\\test\\testProject\\saveTest");
-          String save = "";
+          /*String save = "";
           try
           {
                FileReader fr = new FileReader(test);
@@ -67,7 +71,7 @@ public class HubServer extends Thread
                // TODO Auto-generated catch block
                e.printStackTrace();
           }
-          System.out.println(save);
+          //System.out.println(save);
           try
           {
                pd.insertString(0, save, null);
@@ -75,7 +79,7 @@ public class HubServer extends Thread
           {
                // TODO Auto-generated catch block
                e.printStackTrace();
-          }
+          }*/
           
 
           this.start();
@@ -105,6 +109,7 @@ public class HubServer extends Thread
                               ClientThread client = connectedClients.get(i);
                               if(com.output().equals("sync")) // send sync msg to everyone if msg is sync
                               {
+                                   System.out.println("Time when sync sent to Client " + (i+1) + ": " + getCurrentTimeStamp());
                                    client.talkToClient(syncMsg());
                               }
                               else if(!client.equals(com.sentFrom())) // if not, send to all client that have not sent the msg
@@ -206,7 +211,6 @@ public class HubServer extends Thread
           int length = Integer.valueOf(check.get(3)).intValue();
           String str = check.get(4);
 
-          //"\n\n1" length = 3: str.length(): 15
           if (str.length() != length && !str.equals(""))
           {
                String temp = str;
@@ -344,5 +348,10 @@ public class HubServer extends Thread
                     //e.printStackTrace();
                }
           }
+     }
+
+     public static String getCurrentTimeStamp() {
+          return LocalDateTime.now()
+                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
      }
 }

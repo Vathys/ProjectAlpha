@@ -54,7 +54,7 @@ public class ServerGUI extends JFrame
                               if(f.getName().contains(".project"))
                               {
                                    valid = true;
-                                   System.out.println("initializing project...");
+                                   //System.out.println("initializing project...");
                                    break;
                               }
                          }

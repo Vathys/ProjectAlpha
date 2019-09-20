@@ -3,6 +3,7 @@ package com.alpha.server.helper;
 import java.util.Date;
 
 import com.alpha.server.Command;
+import com.alpha.server.HubServer;
 
 public class Data
 {
@@ -15,6 +16,7 @@ public class Data
           data = com;
           timeSent = new Date();
           diff = timeSent.getTime() - prevTime.getTime();
+          System.out.println("Time Data is initialized: " + HubServer.getCurrentTimeStamp());
      }
 
      public Data(Command com)

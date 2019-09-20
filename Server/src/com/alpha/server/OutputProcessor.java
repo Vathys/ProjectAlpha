@@ -32,9 +32,9 @@ public class OutputProcessor extends Thread
                if(out != null)
                {
                     out.getData().process();
-                    //System.out.println(out.getData().output() + " " + out.getDiff());
+                    System.out.println(out.getData().output() + " " + out.getDiff());
                     OutputProcessor.addToOutputQueue(out);
-                    if(out.getDiff() < 50 && out.getDiff() > 0) //also check for how close offsets are
+                    if(out.getDiff() < 1000 && out.getDiff() > 0) //also check for how close offsets are
                     {
                          //System.out.println("sync sent");
                          Command c = new Command(null, "sync");
