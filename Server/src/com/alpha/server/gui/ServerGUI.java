@@ -17,6 +17,9 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 
+import com.alpha.Main;
+import com.alpha.pre_process.gui.ProjectHandler;
+
 public class ServerGUI extends JFrame
 {
      private static final long serialVersionUID = 1L;
@@ -54,7 +57,7 @@ public class ServerGUI extends JFrame
                               if(f.getName().contains(".project"))
                               {
                                    valid = true;
-                                   //System.out.println("initializing project...");
+                                   Main.ph = new ProjectHandler(fi);
                                    break;
                               }
                          }

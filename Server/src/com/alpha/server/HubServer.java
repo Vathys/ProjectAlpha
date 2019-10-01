@@ -32,7 +32,6 @@ public class HubServer extends Thread
      private ClientCollector collector;
      private OutputProcessor op;
      private ArrayList<ClientThread> connectedClients;
-     private PlainDocument pd;
      private File test;
 
      public HubServer(ServerGUI handle)
@@ -49,38 +48,6 @@ public class HubServer extends Thread
           {
                e.printStackTrace();
           }
-
-          pd = new PlainDocument();
-          test = new File(".\\test\\testProject\\saveTest");
-          /*String save = "";
-          try
-          {
-               FileReader fr = new FileReader(test);
-               int i;
-               while((i = fr.read()) != -1)
-               {
-                    save += (char)i;
-               }
-               fr.close();
-          } catch (FileNotFoundException e)
-          {
-               // TODO Auto-generated catch block
-               e.printStackTrace();
-          } catch (IOException e)
-          {
-               // TODO Auto-generated catch block
-               e.printStackTrace();
-          }
-          //System.out.println(save);
-          try
-          {
-               pd.insertString(0, save, null);
-          } catch (BadLocationException e)
-          {
-               // TODO Auto-generated catch block
-               e.printStackTrace();
-          }*/
-          
 
           this.start();
           op.start();
@@ -117,7 +84,7 @@ public class HubServer extends Thread
                                    client.talkToClient(com.output());
                               }
                          }
-                         updateFile(com.output());
+                         //updateFile(com.output());
                     }
                     else
                     {
@@ -138,24 +105,6 @@ public class HubServer extends Thread
           {
                e.printStackTrace();
           }
-          //Saving text from Plain Document to the saved file
-          //This will be replaced by a call to ProjectHandler to complete saving files
-          try
-          {
-               PrintWriter pw = new PrintWriter(test);
-               String text = pd.getText(0, pd.getLength());
-               text = text.replaceAll("(?!\\r)\\n", "\r\n");
-
-               pw.write(text);
-
-               pw.close();
-          } catch (FileNotFoundException e)
-          {
-               e.printStackTrace();
-          } catch (BadLocationException e)
-          {
-               e.printStackTrace();
-          }
      }
      
      /**
@@ -165,6 +114,7 @@ public class HubServer extends Thread
      {
           return connectedClients;
      }
+     
      /**
       * Adds Clients to the list of clients connected to the server
       * @param e ClientThread to add
@@ -190,81 +140,21 @@ public class HubServer extends Thread
      }
      
      /**
-      * Updates the Plain Document with changes
-      * This function will probably be moved to ProjectHandler
-      * @param com msg in protocol to add
-      */
-     private void updateFile(String com)
-     {
-          ArrayList<String> check = RegexParser.matches("\\[([+|-])\\]\\[off(\\d+)\\]\\[len(\\d+)\\]\"(.*?)\"", com);
-          /*
-          for(int i = 1; i < check.size(); i++)
-          {
-               System.out.println(i + ": " + check.get(i));
-          }
-          */
-          if(check.size() <= 1)
-          {
-               return;
-          }
-          int offset = Integer.valueOf(check.get(2)).intValue();
-          int length = Integer.valueOf(check.get(3)).intValue();
-          String str = check.get(4);
-
-          if (str.length() != length && !str.equals(""))
-          {
-               String temp = str;
-               int n = str.length() - length;
-               n = n / 6;
-
-               int[] offsetArr = new int[n];
-
-               for (int i = 0; i < n; i++)
-               {
-                    offsetArr[i] = temp.indexOf("newLine");
-                    temp = str.substring(offsetArr[i] + 7);
-               }
-
-               if (n == 1)
-               {
-                    str = str.substring(0, offsetArr[0]) + "\n" + str.substring(offsetArr[0] + 7);
-               } else
-               {
-                    String temp2 = str.substring(0, offsetArr[0]);
-                    for (int i = 1; i < n; i++)
-                    {
-                         temp2 += "\n" + str.substring(offsetArr[0] + 7, offsetArr[i]);
-                    }
-                    temp2 += str.substring(offsetArr[n - 1] + 7);
-                    str = temp2;
-               }
-          }
-
-          try
-          {
-               if (check.get(1).equals("+"))
-               {
-                    pd.insertString(offset, str, null);
-               } else if (check.get(1).equals("-"))
-               {
-                    pd.remove(offset, length);
-               }
-          } catch (BadLocationException e)
-          {
-               e.printStackTrace();
-          }
-     }
-
-     /**
       * 
       * @param c
       */
      private void updateClient(ClientThread c)
      {
+          
+     }
+
+     private void constructMsg(String name, PlainDocument pd)
+     {
           try
           {
                String[] content = pd.getText(0, pd.getLength()).split("\\n");
-               
+
+               String[] msgs = new String[content.length];
                for(String s : content)
                {
                     System.out.println(s);
@@ -276,8 +166,8 @@ public class HubServer extends Thread
                {
                     String msg = "";
 
+                    msg += "[" + name + "]";
                     msg += "[+]";
-
                     msg += "[off" + off + "]";
                     msg += "[len" + content[i].length();
                     
@@ -292,7 +182,7 @@ public class HubServer extends Thread
 
                     msg += "\"" + content[i] + "\"";
 
-                    c.talkToClient(msg);
+                    msgs[i] = msg;
                     off += content[i].length() + 1;
                }
           } catch (BadLocationException e)
@@ -300,7 +190,7 @@ public class HubServer extends Thread
                e.printStackTrace();
           }
      }
-
+     
      private String syncMsg()
      {
           String msg = "";
