@@ -147,9 +147,11 @@ public class HubServer extends Thread
      {
           for(String name : Main.ph.getFileNames())
           {
+               System.out.println(name);
                String[] msgs = constructMsg(name, Main.ph.getDocument(name));
                for(String msg : msgs)
                {
+                    System.out.println(msg);
                     c.talkToClient(msg);
                }
           }

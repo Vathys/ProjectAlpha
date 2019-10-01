@@ -30,14 +30,18 @@ public class ProjectHandler
                {
                     projectConfig = f;
                }
-               else if(parent.isDirectory())
+               else if(f.isDirectory())
                {
-                    files.putAll(expandDirectory(f));
+                    files.putAll(expandDirectory(parent.getName() + "\\" + f.getName(), f));
+               }
+               else if(f.isFile())
+               {
+                    files.put(parent.getName() + "\\" + f.getName() ,convertToPlainDocument(f));
                }
           }
      }
      
-     private HashMap<String, PlainDocument> expandDirectory(File directory)
+     private HashMap<String, PlainDocument> expandDirectory(String directoryName, File directory)
      {
           HashMap<String, PlainDocument> files = new LinkedHashMap<String, PlainDocument>();
           
@@ -45,17 +49,11 @@ public class ProjectHandler
           {
                if(f.isFile())
                {
-                    try
-                    {
-                         files.put(f.getCanonicalPath(), convertToPlainDocument(f));
-                    } catch (IOException e)
-                    {
-                         e.printStackTrace();
-                    }
+                    files.put(directoryName + "\\" + f.getName(), convertToPlainDocument(f));
                }
                else
                {
-                    files.putAll(expandDirectory(f));
+                    files.putAll(expandDirectory(directoryName + "\\" + f.getName(), f));
                }
           }
           return files;
