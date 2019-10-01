@@ -82,7 +82,7 @@ public class ProjectHandler
           return pd;
      }
 
-     private void updateDocument(String name, String com)
+     public void updateDocument(String name, String com)
      {
           PlainDocument pd = files.get(name);
           
@@ -145,7 +145,7 @@ public class ProjectHandler
           }    
      }
 
-     private void saveToFile()
+     public void saveToFile()
      {
           for(String name : files.keySet())
           {

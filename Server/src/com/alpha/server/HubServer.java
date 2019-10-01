@@ -77,7 +77,7 @@ public class HubServer extends Thread
                               if(com.output().equals("sync")) // send sync msg to everyone if msg is sync
                               {
                                    System.out.println("Time when sync sent to Client " + (i+1) + ": " + getCurrentTimeStamp());
-                                   client.talkToClient(syncMsg());
+                                   //client.talkToClient(syncMsg());
                               }
                               else if(!client.equals(com.sentFrom())) // if not, send to all client that have not sent the msg
                               {
@@ -145,52 +145,68 @@ public class HubServer extends Thread
       */
      private void updateClient(ClientThread c)
      {
-          
+          for(String name : Main.ph.getFileNames())
+          {
+               String[] msgs = constructMsg(name, Main.ph.getDocument(name));
+               for(String msg : msgs)
+               {
+                    c.talkToClient(msg);
+               }
+          }
      }
 
-     private void constructMsg(String name, PlainDocument pd)
+     private String[] constructMsg(String name, PlainDocument pd)
      {
+          String[] msgs;
+          String[] content = null;
+          
           try
           {
-               String[] content = pd.getText(0, pd.getLength()).split("\\n");
+               content = pd.getText(0, pd.getLength()).split("\\n");
 
-               String[] msgs = new String[content.length];
-               for(String s : content)
-               {
-                    System.out.println(s);
-               }
-               
-               int off = 0;
-
-               for (int i = 0; i < content.length; i++)
-               {
-                    String msg = "";
-
-                    msg += "[" + name + "]";
-                    msg += "[+]";
-                    msg += "[off" + off + "]";
-                    msg += "[len" + content[i].length();
-                    
-                    if(i != content.length - 1)
-                    {
-                         msg += "newLine]";
-                    }
-                    else
-                    {
-                         msg += "]";
-                    }
-
-                    msg += "\"" + content[i] + "\"";
-
-                    msgs[i] = msg;
-                    off += content[i].length() + 1;
-               }
           } catch (BadLocationException e)
           {
                e.printStackTrace();
           }
+          
+
+          msgs = new String[content.length];
+          
+          for(String s : content)
+          {
+               System.out.println(s);
+          }
+          
+          int off = 0;
+
+          for (int i = 0; i < content.length; i++)
+          {
+               String msg = "";
+
+               msg += "[" + name + "]";
+               msg += "[+]";
+               msg += "[off" + off + "]";
+               msg += "[len" + content[i].length();
+               
+               if(i != content.length - 1)
+               {
+                    msg += "newLine]";
+               }
+               else
+               {
+                    msg += "]";
+               }
+
+               msg += "\"" + content[i] + "\"";
+
+               msgs[i] = msg;
+               off += content[i].length() + 1;
+          }
+          
+          return msgs;
      }
      
+     /*
      private String syncMsg()
      {
           String msg = "";
@@ -205,6 +221,7 @@ public class HubServer extends Thread
           }
           return msg;
      }
+     */
      
      private class ClientCollector extends Thread
      {

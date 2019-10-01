@@ -107,7 +107,7 @@ public class Client extends Thread
                               {
                                    // System.out.println(this.getName());
                                    // System.out.println("Command: " + check.get(1));
-                                   System.out.println("Time " + check.get(1) + " received: " + getCurrentTimeStamp());
+                                   // System.out.println("Time " + check.get(1) + " received: " + getCurrentTimeStamp());
                                    e.addUpdate(check.get(1));
                                    msg = "";
                               }
