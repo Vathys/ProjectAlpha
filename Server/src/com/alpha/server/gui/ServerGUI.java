@@ -18,7 +18,7 @@ import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 
 import com.alpha.Main;
-import com.alpha.pre_process.ProjectHandler;
+import com.alpha.server.helper.ProjectHandler;
 
 public class ServerGUI extends JFrame
 {

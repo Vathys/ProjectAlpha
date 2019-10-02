@@ -1,8 +1,8 @@
 package com.alpha;
 
-import com.alpha.pre_process.ProjectHandler;
 import com.alpha.server.HubServer;
 import com.alpha.server.gui.ServerGUI;
+import com.alpha.server.helper.ProjectHandler;
 
 public class Main
 {

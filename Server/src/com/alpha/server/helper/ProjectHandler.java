@@ -1,4 +1,4 @@
-package com.alpha.pre_process;
+package com.alpha.server.helper;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -13,8 +13,6 @@ import java.util.Set;
 
 import javax.swing.text.BadLocationException;
 import javax.swing.text.PlainDocument;
-
-import com.alpha.server.helper.RegexParser;
 
 public class ProjectHandler
 {
