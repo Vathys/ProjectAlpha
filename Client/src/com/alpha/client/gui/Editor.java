@@ -185,9 +185,9 @@ public class Editor extends Thread
           }
           */
           
-          int offset = Integer.valueOf(check.get(2)).intValue();
-          int length = Integer.valueOf(check.get(3)).intValue();
-          String str = check.get(4);
+          int offset = Integer.valueOf(check.get(3)).intValue();
+          int length = Integer.valueOf(check.get(4)).intValue();
+          String str = check.get(5);
 
           //"\n\n1" length = 3: str.length(): 15
           if (str.length() != length && !str.equals(""))
@@ -221,13 +221,13 @@ public class Editor extends Thread
 
           try
           {
-               if (check.get(1).equals("+"))
+               if (check.get(2).equals("+"))
                {
                     textArea.getDocument().insertString(offset, str, null);
-               } else if (check.get(1).equals("-"))
+               } else if (check.get(2).equals("-"))
                {
                     textArea.getDocument().remove(offset, length);
-               } else if(check.get(1).equals("0"))
+               } else if(check.get(2).equals("0"))
                {
                     textArea.getDocument().remove(0, textArea.getDocument().getLength());
                     textArea.getDocument().insertString(0, str, null);

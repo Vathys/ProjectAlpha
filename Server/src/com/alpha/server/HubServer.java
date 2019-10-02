@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -145,10 +146,10 @@ public class HubServer extends Thread
       */
      private void updateClient(ClientThread c)
      {
-          for(String name : Main.ph.getFileNames())
+          for(Path path : Main.ph.getFileNames())
           {
-               System.out.println(name);
-               String[] msgs = constructMsg(name, Main.ph.getDocument(name));
+               System.out.println(path.toString());
+               String[] msgs = constructMsg(path.toString(), Main.ph.getDocument(path));
                for(String msg : msgs)
                {
                     System.out.println(msg);

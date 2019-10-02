@@ -54,10 +54,10 @@ public class ServerGUI extends JFrame
                          for(int i = 0; i < fi.listFiles().length; i++)
                          {
                               File f = fi.listFiles()[i];
-                              if(f.getName().contains(".project"))
+                              if(f.getName().contains("alpha.project"))
                               {
                                    valid = true;
-                                   Main.ph = new ProjectHandler(fi);
+                                   Main.ph = new ProjectHandler(fi, false);
                                    break;
                               }
                          }

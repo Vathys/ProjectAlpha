@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -18,42 +19,61 @@ import com.alpha.server.helper.RegexParser;
 public class ProjectHandler
 {
      private File projectConfig;
-     private HashMap<String, PlainDocument> files;
+     private HashMap<Path, PlainDocument> files;
+     private Path parent;
      
-     public ProjectHandler(File parent)
+     public ProjectHandler(File parent, boolean newProject)
      {
-          files = new LinkedHashMap<String, PlainDocument>();
+          files = new LinkedHashMap<Path, PlainDocument>();
           
+          this.parent = parent.toPath();
+          
+          if(newProject)
+          {
+               File projectConfig = new File(parent, "alpha.project");
+               try
+               {
+                    projectConfig.createNewFile();
+               } catch (IOException e)
+               {
+                    e.printStackTrace();
+               }
+          }
           for(File f : parent.listFiles())
           {
-               if(f.getName().contains(".project"))
+               if(f.getName().contains("alpha.project"))
                {
                     projectConfig = f;
                }
                else if(f.isDirectory())
                {
-                    files.putAll(expandDirectory(parent.getName() + "\\" + f.getName(), f));
+                    files.putAll(expandDirectory(f));
                }
                else if(f.isFile())
                {
-                    files.put(parent.getName() + "\\" + f.getName() ,convertToPlainDocument(f));
+                    files.put(this.parent.relativize(f.toPath()),convertToPlainDocument(f));
                }
           }
-     }
+          
+          for(Path path : files.keySet())
+          {
+               System.out.println(path.toString());
+          }
+     }          
      
-     private HashMap<String, PlainDocument> expandDirectory(String directoryName, File directory)
+     private HashMap<Path, PlainDocument> expandDirectory(File directory)
      {
-          HashMap<String, PlainDocument> files = new LinkedHashMap<String, PlainDocument>();
+          HashMap<Path, PlainDocument> files = new LinkedHashMap<Path, PlainDocument>();
           
           for(File f : directory.listFiles())
           {
                if(f.isFile())
                {
-                    files.put(directoryName + "\\" + f.getName(), convertToPlainDocument(f));
+                    files.put(parent.relativize(f.toPath()), convertToPlainDocument(f));
                }
                else
                {
-                    files.putAll(expandDirectory(directoryName + "\\" + f.getName(), f));
+                    files.putAll(expandDirectory(f));
                }
           }
           return files;
@@ -143,15 +163,16 @@ public class ProjectHandler
           }    
      }
 
+     
      public void saveToFile()
      {
-          for(String name : files.keySet())
+          for(Path path : files.keySet())
           {
                PrintWriter pw;
                try
                {
-                    pw = new PrintWriter(name);
-                    String text = files.get(name).getText(0, files.get(name).getLength());
+                    pw = new PrintWriter(path.toString());
+                    String text = files.get(path).getText(0, files.get(path).getLength());
                     text = text.replaceAll("(?!\\r)\\n", "\r\n");
 
                     pw.write(text);
@@ -164,13 +185,27 @@ public class ProjectHandler
           }
      }
 
-     public Set<String> getFileNames()
+     
+     public Set<Path> getFileNames()
      {
           return files.keySet();
      }
 
-     public PlainDocument getDocument(String name)
+     public PlainDocument getDocument(Path path)
      {
-          return files.get(name);
+          return files.get(path);
+     }
+
+     public void createNewFile(File parent, String name)
+     {
+          File nf = new File(parent, name);
+          try
+          {
+               nf.createNewFile();
+          } catch (IOException e)
+          {
+               e.printStackTrace();
+          }
+          files.put(this.parent.relativize(nf.toPath()), new PlainDocument());
      }
 }
