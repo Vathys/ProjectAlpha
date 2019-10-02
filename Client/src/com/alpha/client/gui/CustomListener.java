@@ -71,7 +71,7 @@ public class CustomListener implements ActionListener, DocumentListener, WindowL
 
                          String text = parent.getTextArea().getText();
                          text = text.replaceAll("(?!\\r)\\n", "\r\n");
-                         
+
                          // Write 
                          w.write(text);
 
@@ -211,12 +211,12 @@ public class CustomListener implements ActionListener, DocumentListener, WindowL
 
           client.send(msg);
      }
-     
+
      @Override
      public void windowOpened(WindowEvent e)
      {
           // TODO Auto-generated method stub
-          
+
      }
 
      @Override
@@ -229,34 +229,34 @@ public class CustomListener implements ActionListener, DocumentListener, WindowL
      public void windowClosed(WindowEvent e)
      {
           // TODO Auto-generated method stub
-          
+
      }
 
      @Override
      public void windowIconified(WindowEvent e)
      {
           // TODO Auto-generated method stub
-          
+
      }
 
      @Override
      public void windowDeiconified(WindowEvent e)
      {
           // TODO Auto-generated method stub
-          
+
      }
 
      @Override
      public void windowActivated(WindowEvent e)
      {
           // TODO Auto-generated method stub
-          
+
      }
 
      @Override
      public void windowDeactivated(WindowEvent e)
      {
           // TODO Auto-generated method stub
-          
+
      }
 }

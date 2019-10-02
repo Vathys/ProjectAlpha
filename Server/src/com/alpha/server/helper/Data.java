@@ -13,8 +13,8 @@ public class Data
      private Date timeSent;
      private long diff;
      private InetAddress clientSent;
-     
-     public Data(ClientThread clientSent, Command com, Date prevTime) 
+
+     public Data(ClientThread clientSent, Command com, Date prevTime)
      {
           this.clientSent = clientSent.getClient().getInetAddress();
           data = com;
@@ -29,7 +29,7 @@ public class Data
           timeSent = new Date();
           diff = -1;
      }
-     
+
      /**
       * @return the data
       */
@@ -45,12 +45,11 @@ public class Data
      {
           return timeSent;
      }
-     
+
      public long getDiff()
      {
           return diff;
      }
-     
 
      public InetAddress getClientSent()
      {

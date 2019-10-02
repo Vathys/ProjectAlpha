@@ -1,4 +1,4 @@
-package com.alpha.pre_process.gui;
+package com.alpha.pre_process;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,14 +21,14 @@ public class ProjectHandler
      private File projectConfig;
      private HashMap<Path, PlainDocument> files;
      private Path parent;
-     
+
      public ProjectHandler(File parent, boolean newProject)
      {
           files = new LinkedHashMap<Path, PlainDocument>();
-          
+
           this.parent = parent.toPath();
-          
-          if(newProject)
+
+          if (newProject)
           {
                File projectConfig = new File(parent, "alpha.project");
                try
@@ -39,46 +39,43 @@ public class ProjectHandler
                     e.printStackTrace();
                }
           }
-          for(File f : parent.listFiles())
+          for (File f : parent.listFiles())
           {
-               if(f.getName().contains("alpha.project"))
+               if (f.getName().contains("alpha.project"))
                {
                     projectConfig = f;
-               }
-               else if(f.isDirectory())
+               } else if (f.isDirectory())
                {
                     files.putAll(expandDirectory(f));
-               }
-               else if(f.isFile())
+               } else if (f.isFile())
                {
-                    files.put(this.parent.relativize(f.toPath()),convertToPlainDocument(f));
+                    files.put(this.parent.relativize(f.toPath()), convertToPlainDocument(f));
                }
           }
-          
-          for(Path path : files.keySet())
+
+          for (Path path : files.keySet())
           {
                System.out.println(path.toString());
           }
-     }          
-     
+     }
+
      private HashMap<Path, PlainDocument> expandDirectory(File directory)
      {
           HashMap<Path, PlainDocument> files = new LinkedHashMap<Path, PlainDocument>();
-          
-          for(File f : directory.listFiles())
+
+          for (File f : directory.listFiles())
           {
-               if(f.isFile())
+               if (f.isFile())
                {
                     files.put(parent.relativize(f.toPath()), convertToPlainDocument(f));
-               }
-               else
+               } else
                {
                     files.putAll(expandDirectory(f));
                }
           }
           return files;
      }
-     
+
      private PlainDocument convertToPlainDocument(File f)
      {
           PlainDocument pd = new PlainDocument();
@@ -87,9 +84,9 @@ public class ProjectHandler
           try
           {
                FileReader fr = new FileReader(f);
-               while((i = fr.read()) != -1)
+               while ((i = fr.read()) != -1)
                {
-                    save += (char)i;
+                    save += (char) i;
                }
                fr.close();
                pd.insertString(0, save, null);
@@ -103,7 +100,7 @@ public class ProjectHandler
      public void updateDocument(String name, String com)
      {
           PlainDocument pd = files.get(name);
-          
+
           ArrayList<String> check = RegexParser.matches("\\[([+|-])\\]\\[off(\\d+)\\]\\[len(\\d+)\\]\"(.*?)\"", com);
           /*
           for(int i = 1; i < check.size(); i++)
@@ -111,7 +108,7 @@ public class ProjectHandler
                System.out.println(i + ": " + check.get(i));
           }
           */
-          if(check.size() <= 1)
+          if (check.size() <= 1)
           {
                return;
           }
@@ -160,13 +157,12 @@ public class ProjectHandler
           } catch (BadLocationException e)
           {
                e.printStackTrace();
-          }    
+          }
      }
 
-     
      public void saveToFile()
      {
-          for(Path path : files.keySet())
+          for (Path path : files.keySet())
           {
                PrintWriter pw;
                try
@@ -185,7 +181,6 @@ public class ProjectHandler
           }
      }
 
-     
      public Set<Path> getFileNames()
      {
           return files.keySet();

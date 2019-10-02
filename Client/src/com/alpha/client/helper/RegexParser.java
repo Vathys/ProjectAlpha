@@ -19,7 +19,7 @@ public class RegexParser
                     match.add(matcher.group(i));
                }
           }
-          
+
           return match;
 
      }

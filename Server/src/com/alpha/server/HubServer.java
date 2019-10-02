@@ -56,11 +56,10 @@ public class HubServer extends Thread
      }
 
      /**
-      * <h1> HubServer Run </h1>
-      * This function keeps a running while that takes from the 
-      * Output Processor output queue and relays messages to all 
-      * the clients according to instructions.
-      * */
+      * <h1>HubServer Run</h1> This function keeps a running while that takes from
+      * the Output Processor output queue and relays messages to all the clients
+      * according to instructions.
+      */
      public void run()
      {
           while (!ServerGUI.getServerClosing())
@@ -70,24 +69,22 @@ public class HubServer extends Thread
                if (com != null)
                {
                     int size = connectedClients.size();
-                    if(com.output() != null)
+                    if (com.output() != null)
                     {
-                         for(int i = 0; i < size; i++)
+                         for (int i = 0; i < size; i++)
                          {
                               ClientThread client = connectedClients.get(i);
-                              if(com.output().equals("sync")) // send sync msg to everyone if msg is sync
+                              if (com.output().equals("sync")) // send sync msg to everyone if msg is sync
                               {
-                                   System.out.println("Time when sync sent to Client " + (i+1) + ": " + getCurrentTimeStamp());
+                                   System.out.println("Time when sync sent to Client " + (i + 1) + ": " + getCurrentTimeStamp());
                                    //client.talkToClient(syncMsg());
-                              }
-                              else if(!client.equals(com.sentFrom())) // if not, send to all client that have not sent the msg
+                              } else if (!client.equals(com.sentFrom())) // if not, send to all client that have not sent the msg
                               {
                                    client.talkToClient(com.output());
                               }
                          }
                          //updateFile(com.output());
-                    }
-                    else
+                    } else
                     {
                          connectedClients.remove(connectedClients.indexOf(com.sentFrom()));
                          updateTextArea();
@@ -107,17 +104,18 @@ public class HubServer extends Thread
                e.printStackTrace();
           }
      }
-     
+
      /**
       * @return ArrayList<ClientThread> returns a list of all connected Clients
-      * */
+      */
      public ArrayList<ClientThread> getConnectedClients()
      {
           return connectedClients;
      }
-     
+
      /**
       * Adds Clients to the list of clients connected to the server
+      * 
       * @param e ClientThread to add
       */
      private void addClient(ClientThread e)
@@ -139,18 +137,17 @@ public class HubServer extends Thread
           }
           Main.gui.setText(text);
      }
-     
+
      /**
-      * 
       * @param c
       */
      private void updateClient(ClientThread c)
      {
-          for(Path path : Main.ph.getFileNames())
+          for (Path path : Main.ph.getFileNames())
           {
                System.out.println(path.toString());
                String[] msgs = constructMsg(path.toString(), Main.ph.getDocument(path));
-               for(String msg : msgs)
+               for (String msg : msgs)
                {
                     System.out.println(msg);
                     c.talkToClient(msg);
@@ -162,7 +159,7 @@ public class HubServer extends Thread
      {
           String[] msgs;
           String[] content = null;
-          
+
           try
           {
                content = pd.getText(0, pd.getLength()).split("\\n");
@@ -171,15 +168,14 @@ public class HubServer extends Thread
           {
                e.printStackTrace();
           }
-          
 
           msgs = new String[content.length];
-          
-          for(String s : content)
+
+          for (String s : content)
           {
                System.out.println(s);
           }
-          
+
           int off = 0;
 
           for (int i = 0; i < content.length; i++)
@@ -190,12 +186,11 @@ public class HubServer extends Thread
                msg += "[+]";
                msg += "[off" + off + "]";
                msg += "[len" + content[i].length();
-               
-               if(i != content.length - 1)
+
+               if (i != content.length - 1)
                {
                     msg += "newLine]";
-               }
-               else
+               } else
                {
                     msg += "]";
                }
@@ -205,10 +200,10 @@ public class HubServer extends Thread
                msgs[i] = msg;
                off += content[i].length() + 1;
           }
-          
+
           return msgs;
      }
-     
+
      /*
      private String syncMsg()
      {
@@ -225,7 +220,7 @@ public class HubServer extends Thread
           return msg;
      }
      */
-     
+
      private class ClientCollector extends Thread
      {
           private HubServer hub;
@@ -260,8 +255,8 @@ public class HubServer extends Thread
           }
      }
 
-     public static String getCurrentTimeStamp() {
-          return LocalDateTime.now()
-                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+     public static String getCurrentTimeStamp()
+     {
+          return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
      }
 }

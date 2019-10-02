@@ -22,7 +22,7 @@ public class ClientThread extends Thread
      private ThreadWriter writer;
      private ConcurrentLinkedQueue<String> clientCom;
      private boolean writerClose;
-     
+
      public ClientThread(Socket client) throws IOException
      {
           this.client = client;
@@ -64,7 +64,7 @@ public class ClientThread extends Thread
                          }
                     }
                }
-               while(!writerClose)
+               while (!writerClose)
                {
                     System.out.println("Waiting for ThreadWriter to close...");
                }

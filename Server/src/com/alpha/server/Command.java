@@ -2,7 +2,6 @@ package com.alpha.server;
 
 import java.net.InetAddress;
 
-
 public class Command
 {
      private String rawCommand;
@@ -20,12 +19,10 @@ public class Command
           if (rawCommand.equals("exit"))
           {
                outputCommand = null;
-          } 
-          else if(rawCommand.equals("sync"))
+          } else if (rawCommand.equals("sync"))
           {
                outputCommand = rawCommand;
-          }
-          else
+          } else
           {
                outputCommand = "{" + rawCommand + "}";
           }

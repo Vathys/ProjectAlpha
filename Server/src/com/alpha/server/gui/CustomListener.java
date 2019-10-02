@@ -13,12 +13,11 @@ public class CustomListener implements WindowListener, ActionListener
      @Override
      public void actionPerformed(ActionEvent e)
      {
-          if(e.getActionCommand().equals("Start"))
+          if (e.getActionCommand().equals("Start"))
           {
                Main.gui.addText("Starting Server");
                Main.startServer();
-          }
-          else if(e.getActionCommand().equals("Stop"))
+          } else if (e.getActionCommand().equals("Stop"))
           {
                Main.gui.addText("Closing Server");
                ServerGUI.closeServer();
