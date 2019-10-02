@@ -1,15 +1,31 @@
 package com.alpha.client;
 
-public class InputProcessor
+import java.util.ArrayList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
+
+import com.alpha.client.gui.Editor;
+import com.alpha.client.helper.RegexParser;
+
+public class InputProcessor extends Thread
 {
-     /*
-      * Main job: reroute incoming inputs to their respective positions
-      * How?
-      * 1) it sends the msgs to be stored in their respective files
-      * 2) it checks if the respective document is open in Editor
-      * 2.1) if yes, then it sends the change to the Editor
-      * 2.2) if no, then it doesn't
-      * */
-     
-     
+	
+	public static BlockingQueue<String> inputQueue;
+	
+	public InputProcessor()
+	{
+		inputQueue = new LinkedBlockingDeque<String>();
+	}
+	public void run()
+	{
+		  while (!Editor.getWindowClosing())
+		  {
+			  String msg = inputQueue.poll();
+			  if(msg != null)
+			  {
+				  ArrayList<String> check = RegexParser.matches("\\[([+-0])\\]\\[off(\\d+)\\]\\[len(\\d+)\\]\"(.*?)\"", msg);
+			  }
+		  }
+	}
+	
 }
