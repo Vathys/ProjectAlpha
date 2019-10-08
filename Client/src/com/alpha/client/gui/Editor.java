@@ -2,6 +2,8 @@ package com.alpha.client.gui;
 
 import java.awt.Dimension;
 import java.awt.event.InputEvent;
+import java.io.File;
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -23,7 +25,7 @@ public class Editor extends Thread
 {
      private JFrame frame;
      private JTextArea textArea;
-
+     private String path;
      private CustomListener lis;
 
      private BlockingQueue<String> updateCom;
@@ -31,6 +33,67 @@ public class Editor extends Thread
      private static boolean windowClosing;
 
      // Constructor 
+     public Editor(Client c, String path)
+     {
+          super();
+          /*try
+          {
+               // Set metl look and feel 
+               UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+          
+               // Set theme to ocean 
+               MetalLookAndFeel.setCurrentTheme(new OceanTheme());
+          } catch (Exception e)
+          {
+               e.printStackTrace();
+          }*/
+          
+          this.path = path;
+
+          lis = new CustomListener(c, this);
+          updateCom = new LinkedBlockingQueue<String>();
+          windowClosing = false;
+          //Frame
+          frame = new JFrame("Editor");
+          frame.setPreferredSize(new Dimension(500, 500));
+
+          // Text component 
+          textArea = new JTextArea();
+          File f = new File(path);
+          String save = "";
+          int i;
+          try
+          {
+               FileReader fr = new FileReader(f);
+               while ((i = fr.read()) != -1)
+               {
+                    save += (char) i;
+               }
+               fr.close();
+               textArea.getDocument().insertString(0, save, null);
+          }
+          catch(Exception e)
+          {
+        	  e.printStackTrace();
+          }
+          textArea.getDocument().addDocumentListener(lis);
+
+          //textArea.addKeyListener(lis);
+          //frame.addKeyListener(lis);
+          frame.addWindowListener(lis);
+
+          setupMenuBar();
+
+          JScrollPane sp = new JScrollPane(textArea);
+
+          sp.setPreferredSize(new Dimension(500, 500));
+
+          frame.add(sp);
+          frame.setSize(500, 500);
+          frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+          frame.pack();
+          frame.setVisible(true);
+     }
      public Editor(Client c)
      {
           super();
@@ -283,5 +346,9 @@ public class Editor extends Thread
      public static void closeWindow()
      {
           windowClosing = true;
+     }
+     public String getPath()
+     {
+    	 return path;
      }
 }

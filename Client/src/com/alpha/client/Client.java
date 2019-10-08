@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
+import com.alpha.client.gui.ClientGUI;
 import com.alpha.client.gui.Editor;
 import com.alpha.client.helper.RegexParser;
 
@@ -38,6 +39,7 @@ public class Client extends Thread
      private String serverName;
      private int port;
      private Editor e;
+     private ClientGUI c;
 
      private ConcurrentLinkedQueue<String> com;
      private ThreadWriter writer;
@@ -65,13 +67,13 @@ public class Client extends Thread
                e.printStackTrace();
           }
           
-          
-          e = new Editor(this);
+         c = new ClientGUI(this);
+          //e = new Editor(this);
 
           //send("Hello from " + clientSocket.getLocalSocketAddress() + " \r\n");
 
           this.startThreads();
-          e.start();
+          c.start();
      }
 
      public void startThreads()
