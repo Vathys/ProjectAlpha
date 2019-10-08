@@ -64,7 +64,8 @@ public class Client extends Thread
           {
                e.printStackTrace();
           }
-
+          
+          
           e = new Editor(this);
 
           //send("Hello from " + clientSocket.getLocalSocketAddress() + " \r\n");
@@ -99,11 +100,10 @@ public class Client extends Thread
                          }
                          if (!check.isEmpty())
                          {
-                              if(check.get(1).equals("exit"))
+                              if (check.get(1).equals("exit"))
                               {
                                    Editor.closeWindow();
-                              }
-                              else
+                              } else
                               {
                                    // System.out.println(this.getName());
                                    // System.out.println("Command: " + check.get(1));
@@ -114,7 +114,7 @@ public class Client extends Thread
                          }
                     }
                }
-               while(!writerClose)
+               while (!writerClose)
                {
                     System.out.println("Waiting for ThreadWriter to close...");
                }
@@ -162,11 +162,11 @@ public class Client extends Thread
           }
      }
 
-     public static String getCurrentTimeStamp() {
-          return LocalDateTime.now()
-                    .format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
+     public static String getCurrentTimeStamp()
+     {
+          return LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS"));
      }
-     
+
      public static void main(String[] args)
      {
           String serverName = args[0];

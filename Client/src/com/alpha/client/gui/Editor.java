@@ -27,7 +27,7 @@ public class Editor extends Thread
      private CustomListener lis;
 
      private BlockingQueue<String> updateCom;
-     
+
      private static boolean windowClosing;
 
      // Constructor 
@@ -60,13 +60,13 @@ public class Editor extends Thread
           //textArea.addKeyListener(lis);
           //frame.addKeyListener(lis);
           frame.addWindowListener(lis);
-          
+
           setupMenuBar();
-          
+
           JScrollPane sp = new JScrollPane(textArea);
-          
+
           sp.setPreferredSize(new Dimension(500, 500));
-          
+
           frame.add(sp);
           frame.setSize(500, 500);
           frame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
@@ -76,7 +76,7 @@ public class Editor extends Thread
 
      private void setupMenuBar()
      {
-        //REDO MENU BAR
+          //REDO MENU BAR
           //Especially New, Open, Save
           //Function of New, Open, Save will depend on where
           //Document will be saved...
@@ -105,11 +105,11 @@ public class Editor extends Thread
           mc.addActionListener(lis);
           m1.add(mi1);
           m1.add(mi2);
-          m1.add(mi3); 
+          m1.add(mi3);
           m1.add(mi12);
           m1.add(mi9);
           m1.add(mc);
-       
+
           // Create amenu for menu 
           JMenu m2 = new JMenu("Edit");
 
@@ -127,44 +127,41 @@ public class Editor extends Thread
           m2.add(mi5);
           m2.add(mi6);
 
-         
-
           JMenu mv = new JMenu("View");
-          
+
           mv.addActionListener(lis);
-          
+
           JMenuItem mi10 = new JMenuItem("Zoom In");
           JMenuItem mi11 = new JMenuItem("Zoom Out");
-          
+
           KeyStroke ctrlPlusKeyStroke = KeyStroke.getKeyStroke('=', InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK);
           mi10.setAccelerator(ctrlPlusKeyStroke);
           KeyStroke ctrlMinusKeyStroke = KeyStroke.getKeyStroke('-', InputEvent.CTRL_DOWN_MASK);
           mi11.setAccelerator(ctrlMinusKeyStroke);
-         
+
           mi10.addActionListener(lis);
           mi11.addActionListener(lis);
-          
+
           //textArea.addKeyListener(lis);
           //frame.addKeyListener(lis);
-         
+
           mv.add(mi10);
           mv.add(mi11);
-          
+
           mb.add(m1);
-          mb.add(m2);  
+          mb.add(m2);
           mb.add(mv);
-         
 
           frame.setJMenuBar(mb);
      }
-     
+
      @Override
      public void run()
      {
           while (!Editor.getWindowClosing())
           {
                String update = updateCom.poll();
-               if(update != null)
+               if (update != null)
                {
                     updateDoc(update);
                }
@@ -176,16 +173,18 @@ public class Editor extends Thread
      {
           textArea.getDocument().removeDocumentListener(lis);
 
-          ArrayList<String> check = RegexParser.matches("\\[([+-0])\\]\\[off(\\d+)\\]\\[len(\\d+)\\]\"(.*?)\"", com);
+          ArrayList<String> check = RegexParser.matches("\\[(.*?)\\]\\[([+-0])\\]\\[off(\\d+)\\]\\[len(\\d+)\\]\"(.*?)\"", com);
+
           /*
           for(int i = 1; i < check.size(); i++)
           {
                System.out.println(i + ": " + check.get(i));
           }
           */
-          int offset = Integer.valueOf(check.get(2)).intValue();
-          int length = Integer.valueOf(check.get(3)).intValue();
-          String str = check.get(4);
+
+          int offset = Integer.valueOf(check.get(3)).intValue();
+          int length = Integer.valueOf(check.get(4)).intValue();
+          String str = check.get(5);
 
           //"\n\n1" length = 3: str.length(): 15
           if (str.length() != length && !str.equals(""))
@@ -219,20 +218,20 @@ public class Editor extends Thread
 
           try
           {
-               if (check.get(1).equals("+"))
+               if (check.get(2).equals("+"))
                {
                     textArea.getDocument().insertString(offset, str, null);
-               } else if (check.get(1).equals("-"))
+               } else if (check.get(2).equals("-"))
                {
                     textArea.getDocument().remove(offset, length);
-               } else if(check.get(1).equals("0"))
+               } else if (check.get(2).equals("0"))
                {
                     textArea.getDocument().remove(0, textArea.getDocument().getLength());
                     textArea.getDocument().insertString(0, str, null);
                }
           } catch (BadLocationException e)
           {
-     
+
                e.printStackTrace();
           }
 
@@ -280,7 +279,7 @@ public class Editor extends Thread
      {
           return windowClosing;
      }
-     
+
      public static void closeWindow()
      {
           windowClosing = true;

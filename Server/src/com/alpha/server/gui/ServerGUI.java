@@ -18,7 +18,7 @@ import javax.swing.JTextArea;
 import javax.swing.WindowConstants;
 
 import com.alpha.Main;
-import com.alpha.pre_process.gui.ProjectHandler;
+import com.alpha.server.helper.ProjectHandler;
 
 public class ServerGUI extends JFrame
 {
@@ -35,11 +35,11 @@ public class ServerGUI extends JFrame
           // Create an object of JFileChooser class 
           JFileChooser j = new JFileChooser(".\\test");
           j.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-          
+
           boolean valid = false;
 
           // Invoke the showsOpenDialog function to show the save dialog 
-          while(!valid)
+          while (!valid)
           {
                int r = j.showOpenDialog(null);
                // If the user selects a file 
@@ -47,36 +47,34 @@ public class ServerGUI extends JFrame
                {
                     // Set the label to the path of the selected directory 
                     File fi = new File(j.getSelectedFile().getAbsolutePath());
-                    
-                    if(fi.isDirectory())
+
+                    if (fi.isDirectory())
                     {
                          //initialize the ProjectHandler class and send it to HubServer
-                         for(int i = 0; i < fi.listFiles().length; i++)
+                         for (int i = 0; i < fi.listFiles().length; i++)
                          {
                               File f = fi.listFiles()[i];
-                              if(f.getName().contains(".project"))
+                              if (f.getName().contains("alpha.project"))
                               {
                                    valid = true;
-                                   Main.ph = new ProjectHandler(fi);
+                                   Main.ph = new ProjectHandler(fi, false);
                                    break;
                               }
                          }
-                         if(!valid)
+                         if (!valid)
                          {
                               JOptionPane.showMessageDialog(this, "Please pick a valid project folder", "No Project Folder", JOptionPane.ERROR_MESSAGE);
                          }
-                    }
-                    else
+                    } else
                     {
                          JOptionPane.showMessageDialog(this, "Please pick a folder", "No Valid Folder", JOptionPane.ERROR_MESSAGE);
                     }
-               }
-               else
+               } else
                {
                     break;
                }
           }
-          
+
           initializeMainServerGUI();
      }
 
@@ -85,12 +83,12 @@ public class ServerGUI extends JFrame
 
           lis = new CustomListener();
           closingServer = false;
-          
+
           textArea = new JTextArea();
           textArea.setPreferredSize(new Dimension(500, 200));
           textArea.setEditable(false);
           JScrollPane sp = new JScrollPane(textArea);
-          
+
           add(sp, BorderLayout.CENTER);
 
           JPanel buttonPane = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -108,18 +106,18 @@ public class ServerGUI extends JFrame
           add(buttonPane, BorderLayout.PAGE_END);
 
           addWindowListener(lis);
-          
+
           setPreferredSize(new Dimension(500, 300));
           setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
           pack();
           setVisible(true);
      }
-     
+
      public void setText(String text)
      {
           textArea.setText(text + "\n");
      }
-     
+
      public void addText(String text)
      {
           textArea.append(text + "\n");
@@ -134,7 +132,7 @@ public class ServerGUI extends JFrame
      {
           closingServer = true;
      }
-     
+
      public static void startServer()
      {
           closingServer = false;

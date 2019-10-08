@@ -17,7 +17,7 @@ public class OutputProcessor extends Thread
      private static BlockingQueue<Data> clientInputQueue;
      private static Date latestTime;
      private static InetAddress latestClient;
-     
+
      public OutputProcessor(HubServer hub)
      {
           clientOutputQueue = new LinkedBlockingDeque<Command>();
@@ -32,12 +32,12 @@ public class OutputProcessor extends Thread
           while (!ServerGUI.getServerClosing())
           {
                Data out = clientInputQueue.poll();
-               if(out != null)
+               if (out != null)
                {
                     out.getData().process();
                     System.out.println(out.getData().output() + " " + out.getDiff());
                     OutputProcessor.addToOutputQueue(out);
-                    if(out.getDiff() < 1000 && out.getDiff() > 0 && !latestClient.equals(out.getClientSent())) //also check for how close offsets are
+                    if (out.getDiff() < 1000 && out.getDiff() > 0 && !latestClient.equals(out.getClientSent())) //also check for how close offsets are
                     {
                          //System.out.println("sync sent");
                          Command c = new Command(null, "sync");
@@ -58,7 +58,7 @@ public class OutputProcessor extends Thread
      {
           clientOutputQueue.add(com);
      }
-     
+
      public static void addToInputQueue(ClientThread clientSent, Command input)
      {
           clientInputQueue.add(new Data(clientSent, input, latestTime));
